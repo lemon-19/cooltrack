@@ -3,8 +3,8 @@ import API from "../../api/axios";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
-import { Commet } from 'react-loading-indicators';
-
+import { Commet } from "react-loading-indicators";
+import { Search } from "lucide-react";
 
 export default function Jobs() {
   const { user } = useContext(AuthContext);
@@ -14,6 +14,8 @@ export default function Jobs() {
   const [limit] = useState(5);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [technicians, setTechnicians] = useState([]);
 
   // Filters
   const [filters, setFilters] = useState({
@@ -34,13 +36,25 @@ export default function Jobs() {
     clientAddress: "",
     contact: "",
     type: "",
+    assignedTo: "",
     status: "Pending",
   });
 
   // Fetch jobs on load or filter change
   useEffect(() => {
     fetchJobs();
+    fetchTechnicians();
   }, [page, filters]);
+
+  // Fetch technicians
+  const fetchTechnicians = async () => {
+    try {
+      const { data } = await API.get("/users/technicians");
+      setTechnicians(data);
+    } catch (err) {
+      console.error("Failed to load technicians:", err);
+    }
+  };
 
   // Fetch Jobs
   const fetchJobs = async () => {
@@ -177,59 +191,80 @@ export default function Jobs() {
             )}
           </div>
 
-          {/* Filters */}
-          <form
-            onSubmit={handleSearchSubmit}
-            className="bg-white shadow-sm p-4 rounded-xl mb-6 sticky top-0 z-10"
-          >
-            <div
-              className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 lg:flex lg:items-center lg:gap-3"
+          {/* Filters (Collapsible) */}
+          <div className="bg-white shadow-sm rounded-xl mb-6 sticky top-0 z-10">
+            {/* Header / Toggle */}
+            <button
+              type="button"
+              onClick={() => setShowFilters((prev) => !prev)}
+              className="w-full flex justify-between items-center px-4 py-3 rounded-t-xl text-gray-700 font-medium hover:bg-gray-50 transition"
             >
-              {/* 🔍 Search bar */}
-              <input
-                type="text"
-                name="search"
-                value={filters.search}
-                onChange={handleFilterChange}
-                placeholder="Search by client name, address, or contact..."
-                className="border rounded-lg px-3 py-2 text-sm w-full md:col-span-2"
-              />
-
-              {/* 🧾 Status filter */}
-              <select
-                name="status"
-                value={filters.status}
-                onChange={handleFilterChange}
-                className="border rounded-lg px-3 py-2 text-sm w-full"
+              <span className="flex justify-center items-center gap-2"><Search size={15}/> Filters</span>
+              <span
+                className={`transform transition-transform duration-200 ${
+                  showFilters ? "rotate-180" : ""
+                }`}
               >
-                <option value="">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Ongoing">Ongoing</option>
-                <option value="Completed">Completed</option>
-              </select>
+                ▼
+              </span>
+            </button>
 
-              {/* ⚙️ Type filter */}
-              <select
-                name="type"
-                value={filters.type}
-                onChange={handleFilterChange}
-                className="border rounded-lg px-3 py-2 text-sm w-full"
+            {/* Collapsible Body */}
+            <div
+              className={`overflow-hidden transition-all duration-300 ${
+                showFilters ? "max-h-[400px] p-4" : "max-h-0 p-0"
+              }`}
+            >
+              <form
+                onSubmit={handleSearchSubmit}
+                className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 lg:flex lg:items-center lg:gap-3"
               >
-                <option value="">All Types</option>
-                <option value="Installation">Installation</option>
-                <option value="Repair">Repair</option>
-                <option value="Maintenance">Maintenance</option>
-              </select>
+                {/* Search */}
+                <input
+                  type="text"
+                  name="search"
+                  value={filters.search}
+                  onChange={handleFilterChange}
+                  placeholder="Search by client name, address, or contact..."
+                  className="border rounded-lg px-3 py-2 text-sm w-full md:col-span-2"
+                />
 
-              {/* 🔘 Button */}
-              <button
-                type="submit"
-                className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-900 w-full"
-              >
-                Apply
-              </button>
+                {/* Status */}
+                <select
+                  name="status"
+                  value={filters.status}
+                  onChange={handleFilterChange}
+                  className="border rounded-lg px-3 py-2 text-sm w-full"
+                >
+                  <option value="">All Status</option>
+                  <option value="Pending">Pending</option>
+                  <option value="Ongoing">Ongoing</option>
+                  <option value="Completed">Completed</option>
+                </select>
+
+                {/* Type */}
+                <select
+                  name="type"
+                  value={filters.type}
+                  onChange={handleFilterChange}
+                  className="border rounded-lg px-3 py-2 text-sm w-full"
+                >
+                  <option value="">All Types</option>
+                  <option value="Installation">Installation</option>
+                  <option value="Repair">Repair</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+
+                {/* Button */}
+                <button
+                  type="submit"
+                  className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-900 w-full"
+                >
+                  Apply
+                </button>
+              </form>
             </div>
-          </form>
+          </div>
 
           {/* 🧾 Scrollable Job List */}
           {loading ? (
@@ -509,6 +544,20 @@ export default function Jobs() {
                   <option value="Installation">Installation</option>
                   <option value="Repair">Repair</option>
                   <option value="Maintenance">Maintenance</option>
+                </select>
+                <select
+                  name="assignedTo"
+                  value={formData.assignedTo}
+                  onChange={handleFormChange}
+                  className="border w-full px-3 py-2 rounded-lg text-sm"
+                  required
+                >
+                  <option value="">Assign Technician</option>
+                  {technicians.map((t) => (
+                    <option key={t._id} value={t._id}>
+                      {t.name}
+                    </option>
+                  ))}
                 </select>
               </>
             ) : (

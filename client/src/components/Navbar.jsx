@@ -22,13 +22,13 @@ export default function Navbar({ title, onMenuClick }) {
 
           {/* Right side: User info */}
           {user && (
-            <div className="text-gray-700 font-medium">
-              {user.name}
-              {user.role && (
-                <span className="text-gray-500 text-sm ml-2">
-                  ({user.role})
-                </span>
-              )}
+            <div className="text-right">
+              <p className="text-gray-800 font-semibold leading-tight">
+                {user.name}
+              </p>
+              <p className="text-gray-500 text-sm font-medium">
+                {user.role}
+              </p>
             </div>
           )}
         </div>

@@ -8,6 +8,7 @@ import jobRoutes from "./routes/jobRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import logRoutes from "./routes/logRoutes.js";
 import technicianRoutes from "./routes/technicianRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
 
 dotenv.config();
@@ -25,6 +26,8 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/api/logs", logRoutes);
 app.use("/api/technician", technicianRoutes);
+app.use("/api/users", userRoutes);
+
 
 app.use(errorHandler);
 

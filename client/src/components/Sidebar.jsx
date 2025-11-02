@@ -43,7 +43,7 @@ export default function Sidebar({ role, isOpen, onClose }) {
 
       {/* Sidebar container */}
       <aside
-        className={`fixed md:static top-0 left-0 h-screen md:h-auto w-60 bg-gray-50 flex flex-col z-50 transform transition-transform duration-300 ease-in-out
+        className={`fixed md:static top-0 left-0 rounded-r-xl h-screen md:h-auto w-60 bg-gray-50 flex flex-col z-50 transform transition-transform duration-300 ease-in-out
         ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Header section */}
