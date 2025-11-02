@@ -1,0 +1,27 @@
+# === NODE MODULES ===
+client/node_modules/
+server/node_modules/
+
+# === ENV FILES ===
+client/.env
+server/.env
+
+# === BUILD / DIST ===
+client/dist/
+client/build/
+server/dist/
+server/build/
+
+# === LOG FILES ===
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# === SYSTEM FILES ===
+.DS_Store
+Thumbs.db
+
+# === EDITOR FOLDERS ===
+.vscode/
