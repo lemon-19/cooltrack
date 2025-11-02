@@ -3,6 +3,8 @@ import API from "../../api/axios";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { AuthContext } from "../../context/AuthContext";
+import { Commet } from 'react-loading-indicators';
+
 
 export default function Jobs() {
   const { user } = useContext(AuthContext);
@@ -178,53 +180,61 @@ export default function Jobs() {
           {/* Filters */}
           <form
             onSubmit={handleSearchSubmit}
-            className="bg-white shadow-sm p-4 rounded-xl mb-6 flex flex-wrap gap-3 items-center sticky top-0 z-10"
+            className="bg-white shadow-sm p-4 rounded-xl mb-6 sticky top-0 z-10"
           >
-            <input
-              type="text"
-              name="search"
-              value={filters.search}
-              onChange={handleFilterChange}
-              placeholder="Search by client name, address, or contact..."
-              className="border rounded-lg px-3 py-2 text-sm flex-1 min-w-[200px]"
-            />
-
-            <select
-              name="status"
-              value={filters.status}
-              onChange={handleFilterChange}
-              className="border rounded-lg px-3 py-2 text-sm"
+            <div
+              className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-2 lg:flex lg:items-center lg:gap-3"
             >
-              <option value="">All Status</option>
-              <option value="Pending">Pending</option>
-              <option value="Ongoing">Ongoing</option>
-              <option value="Completed">Completed</option>
-            </select>
+              {/* 🔍 Search bar */}
+              <input
+                type="text"
+                name="search"
+                value={filters.search}
+                onChange={handleFilterChange}
+                placeholder="Search by client name, address, or contact..."
+                className="border rounded-lg px-3 py-2 text-sm w-full md:col-span-2"
+              />
 
-            <select
-              name="type"
-              value={filters.type}
-              onChange={handleFilterChange}
-              className="border rounded-lg px-3 py-2 text-sm"
-            >
-              <option value="">All Types</option>
-              <option value="Installation">Installation</option>
-              <option value="Repair">Repair</option>
-              <option value="Maintenance">Maintenance</option>
-            </select>
+              {/* 🧾 Status filter */}
+              <select
+                name="status"
+                value={filters.status}
+                onChange={handleFilterChange}
+                className="border rounded-lg px-3 py-2 text-sm w-full"
+              >
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Completed">Completed</option>
+              </select>
 
-            <button
-              type="submit"
-              className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-900"
-            >
-              Apply
-            </button>
+              {/* ⚙️ Type filter */}
+              <select
+                name="type"
+                value={filters.type}
+                onChange={handleFilterChange}
+                className="border rounded-lg px-3 py-2 text-sm w-full"
+              >
+                <option value="">All Types</option>
+                <option value="Installation">Installation</option>
+                <option value="Repair">Repair</option>
+                <option value="Maintenance">Maintenance</option>
+              </select>
+
+              {/* 🔘 Button */}
+              <button
+                type="submit"
+                className="bg-gray-800 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-900 w-full"
+              >
+                Apply
+              </button>
+            </div>
           </form>
 
           {/* 🧾 Scrollable Job List */}
           {loading ? (
-            <div className="text-center py-10 text-gray-500">
-              Loading jobs...
+            <div className="flex justify-center items-center py-20">
+              <Commet color="#3B82F6" size="medium" text="" textColor="" />
             </div>
           ) : jobs.length > 0 ? (
             <div className="space-y-3 overflow-y-auto max-h-[60vh] pr-2">
@@ -283,7 +293,9 @@ export default function Jobs() {
               ))}
             </div>
           ) : (
-            <div className="text-gray-500 text-center py-10">No jobs found.</div>
+            <div className="text-gray-500 text-center py-10">
+              No jobs found.
+            </div>
           )}
 
           {/* Pagination */}
