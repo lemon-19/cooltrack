@@ -1,24 +1,18 @@
 import mongoose from "mongoose";
 
-const subGroupSchema = new mongoose.Schema({
-  subName: String,
+const batchSchema = new mongoose.Schema({
+  batchName: String,          // e.g. "Batch #001"
   quantity: Number,
-  lastUpdated: Date,
-});
-
-const groupSchema = new mongoose.Schema({
-  groupName: String,
-  totalQuantity: Number,
-  subGroups: [subGroupSchema],
+  lastUpdated: { type: Date, default: Date.now },
 });
 
 const inventorySchema = new mongoose.Schema({
   itemName: { type: String, required: true },
   category: { type: String, required: true },
-  totalQuantity: { type: Number, required: true, default: 0 },
   unit: { type: String, required: true },
+  totalQuantity: { type: Number, default: 0 },
   minThreshold: { type: Number, default: 10 },
-  groups: [groupSchema],
+  batches: [batchSchema],
   lastUpdated: { type: Date, default: Date.now },
 });
 
